@@ -1,0 +1,26 @@
+//TRANSMITTER
+#include <SoftwareSerial.h>  // Include SoftwareSerial library for XBee communication
+
+// Define the pins for XBee communication
+SoftwareSerial XBee(10, 11);  // XBee: RX = 10, TX = 11
+
+void setup() {
+  Serial.begin(9600);          // Start Bluetooth communication (via Serial Monitor)
+  XBee.begin(9600);            // Start XBee communication
+}
+
+void loop() {
+  // 1. Receive Data from Bluetooth (Serial Monitor)
+  if (Serial.available() > 0) {
+    String bluetoothData = Serial.readStringUntil('\n');
+    bluetoothData.trim();       // Remove unwanted spaces or newlines
+    if (bluetoothData.length() > 0) {
+      XBee.print('<');          // Start marker
+      XBee.print(bluetoothData);
+      XBee.println('>');        // End marker
+      // Debugging output
+      Serial.print("Sent to Receiver via XBee: ");
+      Serial.println(bluetoothData);
+    }
+  }
+}
